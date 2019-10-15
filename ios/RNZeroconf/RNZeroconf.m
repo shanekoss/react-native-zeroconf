@@ -48,9 +48,14 @@ RCT_EXPORT_METHOD(registerService:(NSString *)type
                   protocol:(NSString *)protocol
                   domain:(NSString *)domain
                   name:(NSString *)name
-                  port:(int)port)
+                  port:(int)port
+                  address:(NSString *)address)
+
 {
     const NSNetService *svc = [[NSNetService alloc] initWithDomain:domain type:[NSString stringWithFormat:@"_%@._%@.", type, protocol] name:name port:port];
+    NSDictionary*txtRecordDataDictionary = [NSDictionary dictionaryWithObject:address forKey:@"address"];
+
+    [svc setTXTRecordData:[NSNetService dataFromTXTRecordDictionary:txtRecordDataDictionary]];
     [svc setDelegate:self];
     [svc scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
 
